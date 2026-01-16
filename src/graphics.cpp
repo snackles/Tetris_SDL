@@ -29,13 +29,11 @@ void draw_block(GameData& game, int x, int y, const SDL_Color& color, bool is_gh
         BLOCK_SIZE - BLOCK_OUTLINE,
         BLOCK_SIZE - BLOCK_OUTLINE
     };
-
+	
+	// Цвет блока
 	SDL_SetRenderDrawColor(game.renderer, 
             color.r, color.g, color.b, color.a);
-
-	SDL_RenderFillRect(game.renderer, &rect);
-	
-	SDL_SetRenderDrawBlendMode(game.renderer, SDL_BLENDMODE_NONE);
+	SDL_RenderFillRect(game.renderer, &rect);	
 }
 
 // Рисование игрового поля
@@ -55,15 +53,15 @@ void draw_board(GameData& game) {
     // Сетка
     draw_grid(game);
     
-    // Блоки на поле
-    // for (int y = 0; y < game.board.height; ++y) {
-//         for (int x = 0; x < game.board.width; ++x) {
-//             if (game.board.grid[y][x] != TYPE_NONE){
-//                 SDL_Color color = get_color_for_type(game.board.grid[y][x]);
-//                 draw_block(game, x, y, color);
-//             }
-//         }
-//     }
+	// Блоки на поле
+     for (int y = 0; y < game.board.height; ++y) {
+        for (int x = 0; x < game.board.width; ++x) {
+            if (game.board.grid[y][x] != TYPE_NONE){
+                SDL_Color color = get_color_for_type(game.board.grid[y][x]);
+                draw_block(game, x, y, color);
+            }
+        }
+    }
  }
 
 // Рисование сетки
@@ -103,17 +101,17 @@ void draw_current_piece(GameData& game) {
     }
 }
 
-// Рисование следующей фигуры
+// Рисование следующей фигуры (Поправить расположение фона/фигуры)
 void draw_next_piece(GameData& game) {
     // Фон
-//    SDL_Rect next_bg = {NEXT_PIECE_X - 20, NEXT_PIECE_Y - 20, 150, 150};
-    SDL_SetRenderDrawColor(game.renderer, 0, 0, 0, 150);
-//    SDL_RenderFillRect(game.renderer, &next_bg);
+   SDL_Rect next_bg = {NEXT_PIECE_X, NEXT_PIECE_Y, 120, 120};
+	SDL_SetRenderDrawColor(game.renderer, 0, 0, 0, 255);
+    SDL_RenderFillRect(game.renderer, &next_bg);
 
 	// Рисуем следующую фигуру
     for (const auto& block : game.next_piece.blocks) {
-        int x = NEXT_PIECE_X / BLOCK_SIZE + block.x + 2;
-        int y = NEXT_PIECE_Y / BLOCK_SIZE + block.y + 2;
+        int x = NEXT_PIECE_X / BLOCK_SIZE + block.x;
+        int y = NEXT_PIECE_Y / BLOCK_SIZE + block.y;
         draw_block(game, x, y, game.next_piece.color);
     }
 }

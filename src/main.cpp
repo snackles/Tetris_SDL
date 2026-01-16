@@ -16,29 +16,20 @@ int main(int argc, char* argv[]) {
         
         // Главный игровой цикл
         game.last_time = SDL_GetTicks();
-
-		bool quit = false;
-		SDL_Event event;
 		
-        while (!quit) {
+        while (game.is_running) {
+			// Обработка событий
+            process_events(game);
 			
-			while (SDL_PollEvent(&event) != 0) {
-				
-				if (event.type == SDL_QUIT) {
-					quit = true;
-				}
-			}
             // Расчет дельты времени
             Uint32 current_time = SDL_GetTicks();
             game.delta_time = (current_time - game.last_time) / 1000.0f;
-            game.last_time = current_time;
-
-            // Очистка экрана красным для теста
-			SDL_SetRenderDrawColor(game.renderer, 255, 0, 0, 255);  // Красный
-			SDL_RenderClear(game.renderer);
-    
+            game.last_time = current_time;;
+			
+			// Отрисовка игры
 			render_game(game);
 			SDL_RenderPresent(game.renderer);
+			
             // Обновление игры
             if (!game.is_paused && game.game_state == STATE_PLAYING) {
                 update_game(game, game.delta_time);

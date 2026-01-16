@@ -31,6 +31,7 @@ struct GameData {
     // SDL объекты
     SDL_Window* window;
     SDL_Renderer* renderer;
+	
 	// Игровые объекты
     GameBoard board;
     Tetromino current_piece;
@@ -59,6 +60,8 @@ void update_game(GameData& game, float dt);
 void spawn_new_piece(GameData &game);
 bool move_piece(Tetromino &piece, int dx, int dy, const GameBoard &board);
 bool check_collision(const Tetromino &piece, const GameBoard &board);
+void hard_drop_piece(GameData &game);
+void merge_piece(GameData& game);
 
 // Графика
 void render_game(GameData& game);
@@ -71,6 +74,10 @@ void draw_block(GameData &game, int x, int y, const SDL_Color &color,
 
 // Ввод
 void process_events(GameData &game);
+ void handle_key_press(GameData &game, SDL_Keycode key);
+ void handle_key_release(GameData &game, SDL_Keycode key);
+void handle_keyboard(GameData& game, float dt);
+
 
 // Утилиты
 SDL_Color get_color_for_type(int type);

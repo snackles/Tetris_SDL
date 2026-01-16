@@ -6,9 +6,6 @@
 #include <algorithm>
 #include <sstream>
 
-SDL_Window* gWindow = NULL;
-SDL_Renderer* gRenderer = NULL;
-
 const std::array<std::array<Point, 4>, 7> TETROMINO_SHAPES = {
     {// I
      {{{0, -1}, {0, 0}, {0, 1}, {0, 2}}},
@@ -68,10 +65,10 @@ bool init_game(GameData& game) {
     game.board.width = BOARD_WIDTH;
     game.board.height = BOARD_HEIGHT;
     game.board.grid.clear();
-    game.board.grid.resize(BOARD_HEIGHT);
-    for (auto& row : game.board.grid) {
-        row.resize(BOARD_WIDTH, 0);
-    }   
+	game.board.grid = std::vector<std::vector<int>>(
+		BOARD_HEIGHT, 
+        std::vector<int>(BOARD_WIDTH, TYPE_NONE)
+		);
     
     // Инициализация состояния игры
     game.game_state = STATE_PLAYING;
@@ -149,8 +146,8 @@ void update_game(GameData& game, float dt) {
     // Автоматическое падение
     if (game.fall_timer >= game.fall_speed) {
         if (!move_piece(game.current_piece, 0, 1, game.board)) {
-			game.current_piece.type = TYPE_NONE;
-			
+			// Фиксация фигуры
+            merge_piece(game);
 			// Создание новой фигуры
 			spawn_new_piece(game);
 		}
@@ -171,6 +168,18 @@ bool move_piece(Tetromino& piece, int dx, int dy, const GameBoard& board) {
     return false;
 }
 
+// Фиксация фигуры
+void merge_piece(GameData& game) {
+    for (const auto& block : game.current_piece.blocks) {
+        int x = game.current_piece.position.x + block.x;
+        int y = game.current_piece.position.y + block.y;
+        
+        if (y >= 0 && x >= 0 && x < game.board.width && y < game.board.height) {
+            game.board.grid[y][x] = game.current_piece.type;
+        }
+    }
+}
+
 // Проверка коллизий
 bool check_collision(const Tetromino& piece, const GameBoard& board) {
     for (const auto& block : piece.blocks) {
@@ -180,7 +189,11 @@ bool check_collision(const Tetromino& piece, const GameBoard& board) {
         // Проверка границ
         if (x < 0 || x >= board.width || y >= board.height) {
             return true;
-        }
+		}
+		//Проверка фигур
+		if (y >= 0 && board.grid[y][x] != TYPE_NONE) {
+			return true;
+		}
 	}
     return false;
 }
@@ -190,4 +203,11 @@ void spawn_new_piece(GameData& game) {
     game.current_piece = game.next_piece;
     game.next_piece = create_tetromino(std::rand() % 7);
     game.current_piece.position = {BOARD_WIDTH / 2 - 1, 0};
+}
+
+// Жесткое падение
+void hard_drop_piece(GameData& game) {
+	while (move_piece(game.current_piece, 0, 1, game.board)){}
+	merge_piece(game);
+	spawn_new_piece(game);
 }
