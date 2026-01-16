@@ -14,6 +14,9 @@ void render_game(GameData& game) {
     // Рисование игрового поля
     draw_board(game);
 
+	// Рисование ghost фигуры
+    draw_ghost_piece(game);
+
 	// Рисование текущей фигуры
     draw_current_piece(game);
 
@@ -30,9 +33,14 @@ void draw_block(GameData& game, int x, int y, const SDL_Color& color, bool is_gh
         BLOCK_SIZE - BLOCK_OUTLINE
     };
 	
-	// Цвет блока
-	SDL_SetRenderDrawColor(game.renderer, 
-            color.r, color.g, color.b, color.a);
+	if (is_ghost) {
+        // Полупрозрачный для ghost фигуры
+        SDL_SetRenderDrawColor(game.renderer, 
+							   color.r, color.g, color.b, 100);
+    } else {
+        SDL_SetRenderDrawColor(game.renderer, 
+							   color.r, color.g, color.b, color.a);
+    }
 	SDL_RenderFillRect(game.renderer, &rect);	
 }
 
@@ -101,10 +109,27 @@ void draw_current_piece(GameData& game) {
     }
 }
 
+void draw_ghost_piece(GameData& game) {
+    Tetromino ghost = game.current_piece;
+    
+    // Находим позицию падения
+    while (move_piece(ghost, 0, 1, game.board)) {}
+    
+    // Рисуем ghost фигуру
+    for (const auto& block : ghost.blocks) {
+        int x = ghost.position.x + block.x;
+        int y = ghost.position.y + block.y;
+        
+        if (y >= 0) {
+            draw_block(game, x, y, ghost.color, true);
+        }
+    }
+}
+
 // Рисование следующей фигуры (Поправить расположение фона/фигуры)
 void draw_next_piece(GameData& game) {
     // Фон
-   SDL_Rect next_bg = {NEXT_PIECE_X, NEXT_PIECE_Y, 120, 120};
+	SDL_Rect next_bg = {NEXT_PIECE_X, NEXT_PIECE_Y, 120, 120};
 	SDL_SetRenderDrawColor(game.renderer, 0, 0, 0, 255);
     SDL_RenderFillRect(game.renderer, &next_bg);
 

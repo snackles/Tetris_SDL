@@ -107,7 +107,7 @@ void cleanup(GameData& game) {
 Tetromino create_tetromino(int type) {
     Tetromino piece;
     piece.type = type;
-//    piece.rotation = 0;
+    piece.rotation = 0;
     piece.color = get_color_for_type(type);
     piece.position = {BOARD_WIDTH / 2 - 1, 0};
     
@@ -148,6 +148,10 @@ void update_game(GameData& game, float dt) {
         if (!move_piece(game.current_piece, 0, 1, game.board)) {
 			// Фиксация фигуры
             merge_piece(game);
+			
+			// Очистка линий
+			clear_completed_lines(game.board);
+			
 			// Создание новой фигуры
 			spawn_new_piece(game);
 		}
@@ -198,16 +202,86 @@ bool check_collision(const Tetromino& piece, const GameBoard& board) {
     return false;
 }
 
+// Поворот фигуры
+void rotate_piece(Tetromino& piece, bool clockwise, const GameBoard& board) {
+    if (piece.type == TYPE_O) return;
+    
+    Tetromino test_piece = piece;
+    
+    for (auto& block : test_piece.blocks) {
+        int x = block.x;
+        int y = block.y;
+        
+        if (clockwise) {
+            block.x = -y;
+            block.y = x;
+        } else {
+            block.x = y;
+            block.y = -x;
+        }
+    }
+    
+    // Wall kick
+    Point offsets[] = {{0, 0}, {-1, 0}, {1, 0}, {0, -1}};
+    
+    for (const auto& offset : offsets) {
+        Tetromino kick_test = test_piece;
+        kick_test.position.x += offset.x;
+        kick_test.position.y += offset.y;
+        
+        if (!check_collision(kick_test, board)) {
+            piece = kick_test;
+            piece.rotation = (piece.rotation + (clockwise ? 1 : 3)) % 4;
+            return;
+        }
+    }
+}
+
+// Очистка линий
+int clear_completed_lines(GameBoard& board) {
+    int lines_cleared = 0;
+    
+    for (int y = board.height - 1; y >= 0; --y) {
+        bool line_full = true;
+        
+        for (int x = 0; x < board.width; ++x) {
+            if (board.grid[y][x] == TYPE_NONE) {
+                line_full = false;
+                break;
+            }
+        }
+        
+        if (line_full) {
+            for (int y2 = y; y2 > 0; --y2) {
+                for (int x = 0; x < board.width; ++x) {
+                    board.grid[y2][x] = board.grid[y2 - 1][x];
+                }
+            }
+            
+            for (int x = 0; x < board.width; ++x) {
+                board.grid[0][x] = TYPE_NONE;
+            }
+            
+            ++lines_cleared;
+            ++y;
+        }
+    }
+    
+    return lines_cleared;
+}
+
 // Создание новой фигуры
 void spawn_new_piece(GameData& game) {
     game.current_piece = game.next_piece;
     game.next_piece = create_tetromino(std::rand() % 7);
     game.current_piece.position = {BOARD_WIDTH / 2 - 1, 0};
+	if (check_collision(game.current_piece, game.board)){
+			game.game_over = true;
+		}
 }
 
 // Жесткое падение
 void hard_drop_piece(GameData& game) {
 	while (move_piece(game.current_piece, 0, 1, game.board)){}
 	merge_piece(game);
-	spawn_new_piece(game);
 }

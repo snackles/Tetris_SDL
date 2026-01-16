@@ -41,6 +41,17 @@ void handle_key_press(GameData& game, SDL_Keycode key) {
                 hard_drop_piece(game);
             }
             break;
+	case KEY_ROTATE_CW:
+		if (!game.is_paused && !game.game_over) {
+			rotate_piece(game.current_piece, true, game.board);
+		}
+		break;
+            
+	case KEY_ROTATE_CCW:
+		if (!game.is_paused && !game.game_over) {
+			rotate_piece(game.current_piece, false, game.board);
+		}
+		break;
 	}
 }
 
