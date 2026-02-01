@@ -22,6 +22,32 @@ void render_game(GameData& game) {
 
 	// Рисование следующей фигуры
     draw_next_piece(game);
+
+	// Рисование UI
+	draw_ui(game);
+
+	// Рисование Game Over
+	if (game.game_over) {
+        draw_text(game, "GAME OVER", 
+                 WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 - 25,
+                 SDL_Color{255, 0, 0, 255});
+    }
+}
+
+// Рисование текста (аналог SFML sf::Text)
+void draw_text(GameData& game, const std::string& text, int x, int y, SDL_Color color) {
+    if (!game.font) return;
+    
+    SDL_Surface* surface = TTF_RenderText_Solid(game.font, text.c_str(), color);
+    if (!surface) return;
+    
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(game.renderer, surface);
+	SDL_Rect rect = {x, y, surface->w, surface->h};
+    
+	SDL_RenderCopy(game.renderer, texture, NULL, &rect);
+    
+	SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
 }
 
 // Рисование блока
@@ -126,7 +152,7 @@ void draw_ghost_piece(GameData& game) {
     }
 }
 
-// Рисование следующей фигуры (Поправить расположение фона/фигуры)
+// Рисование следующей фигуры
 void draw_next_piece(GameData& game) {
     // Фон
 	SDL_Rect next_bg = {NEXT_PIECE_X, NEXT_PIECE_Y, 120, 120};
@@ -139,4 +165,19 @@ void draw_next_piece(GameData& game) {
         int y = NEXT_PIECE_Y / BLOCK_SIZE + block.y;
         draw_block(game, x, y, game.next_piece.color);
     }
+}
+
+// Рисование UI (счета, уровня, линий)
+void draw_ui(GameData& game) {
+    // Счет
+    std::string score_text = "SCORE: " + std::to_string(game.score);
+    draw_text(game, score_text, SCORE_X, SCORE_Y, COLOR_TEXT);
+    
+    // Уровень
+    std::string level_text = "LEVEL: " + std::to_string(game.level);
+    draw_text(game, level_text, LEVEL_X, LEVEL_Y, COLOR_TEXT);
+    
+    // Линии
+    std::string lines_text = "LINES: " + std::to_string(game.lines_cleared);
+    draw_text(game, lines_text, LINES_X, LINES_Y, COLOR_TEXT);
 }

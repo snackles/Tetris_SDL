@@ -1,6 +1,6 @@
 CXX = clang++
 CXXFLAGS = -std=c++17 -Wall -Wextra -I/opt/homebrew/include -Isrc
-LDFLAGS = -L/opt/homebrew/lib -lSDL2
+LDFLAGS = -L/opt/homebrew/lib -lSDL2 -lSDL2_ttf
 
 TARGET = macGame
 SOURCES = src/main.cpp src/tetris.cpp src/graphics.cpp src/input.cpp

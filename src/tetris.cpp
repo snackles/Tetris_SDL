@@ -24,7 +24,7 @@ const std::array<std::array<Point, 4>, 7> TETROMINO_SHAPES = {
 
 // Инициализация игры
 bool init_game(GameData& game) {
-    std::srand(static_cast<unsigned>(std::time(nullptr)));
+    std::srand(static_cast<unsigned>(SDL_GetTicks()));
 
 	// Инициализация SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -57,7 +57,14 @@ bool init_game(GameData& game) {
     if (!game.renderer) {
         std::cerr << "Renderer could not be created! SDL_Error: " << SDL_GetError() << std::endl;
         return false;
-    }	
+    }
+
+	 // Инициализация SDL_ttf
+    if (TTF_Init() == -1) {
+        std::cerr << "SDL_ttf could not initialize! SDL_ttf Error: " << TTF_GetError() << std::endl;
+        return false;
+    }
+	
     // Установка режима смешивания для прозрачности
     SDL_SetRenderDrawBlendMode(game.renderer, SDL_BLENDMODE_BLEND);
     
@@ -71,12 +78,21 @@ bool init_game(GameData& game) {
 		);
     
     // Инициализация состояния игры
+	game.score = 0;
+    game.level = 1;
+    game.lines_cleared = 0;
     game.game_state = STATE_PLAYING;
 	game.fall_speed = INITIAL_FALL_SPEED;
     game.fall_timer = 0.0f;
     game.game_over = false;
 	game.is_paused = false;
     game.is_running = true;
+
+	// Инициализация графики и звука
+    if (!init_graphics(game)) {
+        std::cerr << "Failed to initialize graphics!\n";
+        return false;
+    }
 
 	// Создание первой и следующей фигур
     game.next_piece = create_tetromino(std::rand() % 7);
@@ -85,9 +101,18 @@ bool init_game(GameData& game) {
 	return true;
 }
 
+// Инициализация графики
+bool init_graphics(GameData& game) {
+	 // Загрузка шрифта
+    game.font = TTF_OpenFont("assets/fonts/Tetris.ttf", 24);
+    if (!game.font) {
+        std::cerr << "Failed to load font! SDL_ttf Error: " << TTF_GetError() << std::endl;
+    }
+    return true;
+}
+
 // Очистка ресурсов
 void cleanup(GameData& game) {
-	
 	// Освобождение SDL объектов
     if (game.renderer != NULL) {
         SDL_DestroyRenderer(game.renderer);
@@ -150,7 +175,22 @@ void update_game(GameData& game, float dt) {
             merge_piece(game);
 			
 			// Очистка линий
-			clear_completed_lines(game.board);
+			int lines = clear_completed_lines(game.board);
+			if (lines > 0) {
+				// Подсчет очков
+                switch (lines) {
+				case 1: add_score(game, SCORE_SINGLE * game.level); break;
+				case 2: add_score(game, SCORE_DOUBLE * game.level); break;
+				case 3: add_score(game, SCORE_TRIPLE * game.level); break;
+				case 4: add_score(game, SCORE_TETRIS * game.level); break;
+                }
+                
+                game.lines_cleared += lines;
+                if (game.lines_cleared >= game.level * LINES_PER_LEVEL) {
+                    game.level++;
+                    game.fall_speed *= SPEED_INCREASE_PER_LEVEL;
+                }
+            }
 			
 			// Создание новой фигуры
 			spawn_new_piece(game);
@@ -282,6 +322,15 @@ void spawn_new_piece(GameData& game) {
 
 // Жесткое падение
 void hard_drop_piece(GameData& game) {
-	while (move_piece(game.current_piece, 0, 1, game.board)){}
+	int cells_dropped = 0;
+	while (move_piece(game.current_piece, 0, 1, game.board)){
+		cells_dropped++;
+	}
+
+	game.score += cells_dropped * SCORE_HARD_DROP_PER_CELL;
 	merge_piece(game);
+}
+
+void add_score(GameData& game, int points) {
+    game.score += points;
 }

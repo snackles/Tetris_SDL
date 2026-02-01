@@ -2,6 +2,7 @@
 #define TETRIS_HPP
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <vector>
 #include <array>
 #include <string>
@@ -31,6 +32,7 @@ struct GameData {
     // SDL объекты
     SDL_Window* window;
     SDL_Renderer* renderer;
+	TTF_Font* font;
 	
 	// Игровые объекты
     GameBoard board;
@@ -38,6 +40,10 @@ struct GameData {
     Tetromino next_piece;
 	
 	// Состояние игры
+	int score;
+    int level;
+    int lines;
+	int lines_cleared;
     int game_state;
 	float fall_speed;
     float fall_timer;
@@ -53,6 +59,7 @@ struct GameData {
 // Прототипы функций
 // Инициализация
 bool init_game(GameData &game);
+bool init_graphics(GameData& game);
 void cleanup(GameData &game);
 
 // Игровая логика
@@ -74,16 +81,19 @@ void draw_grid(GameData &game);
 void draw_ghost_piece(GameData& game);
 void draw_block(GameData &game, int x, int y, const SDL_Color &color,
                 bool is_ghost = false);
+void draw_text(GameData& game, const std::string& text, int x, int y, SDL_Color color);
+void draw_ui(GameData& game);
 
 // Ввод
 void process_events(GameData &game);
- void handle_key_press(GameData &game, SDL_Keycode key);
- void handle_key_release(GameData &game, SDL_Keycode key);
+void handle_key_press(GameData &game, SDL_Keycode key);
+void handle_key_release(GameData &game, SDL_Keycode key);
 void handle_keyboard(GameData& game, float dt);
 
 
 // Утилиты
 SDL_Color get_color_for_type(int type);
 Tetromino create_tetromino(int type);
+void add_score(GameData& game, int points);
 
 #endif // TETRIS_HPP
