@@ -74,7 +74,7 @@ void handle_keyboard(GameData& game, float dt) {
     
     const uint8_t* keystate = SDL_GetKeyboardState(NULL);
     
-    // Движение влево с автоповтором
+    // Движение влево
     if (keystate[SDL_SCANCODE_LEFT]) {
         if (!left_was_pressed || left_timer >= DAS_DELAY) {
             float move_rate = left_was_pressed ? DAS_SPEED : 0.0f;
@@ -90,7 +90,7 @@ void handle_keyboard(GameData& game, float dt) {
         left_timer = 0.0f;
     }
     
-    // Движение вправо с автоповтором
+    // Движение вправо
     if (keystate[SDL_SCANCODE_RIGHT]) {
         if (!right_was_pressed || right_timer >= DAS_DELAY) {
             float move_rate = right_was_pressed ? DAS_SPEED : 0.0f;
@@ -106,7 +106,7 @@ void handle_keyboard(GameData& game, float dt) {
         right_timer = 0.0f;
     }
     
-    // Быстрое падение вниз
+    // Быстрое падение
     if (keystate[SDL_SCANCODE_DOWN]) {
         if (!down_was_pressed || down_timer >= 0.05f) {
             if (move_piece(game.current_piece, 0, 1, game.board)){}

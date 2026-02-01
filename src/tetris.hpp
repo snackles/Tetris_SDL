@@ -14,15 +14,15 @@ struct Point {
 };
 
 struct Tetromino {
-    int type;                         // TetrominoType
-    std::array<Point, 4> blocks;      // 4 блока фигуры
-    int rotation;                     // Текущий поворот (0-3)
-    SDL_Color color;                  // Цвет фигуры
-    Point position;                   // Позиция на поле
+    int type;                         
+    std::array<Point, 4> blocks;     
+    int rotation;                    
+    SDL_Color color;
+	Point position;  
 };
 
 struct GameBoard {
-    std::vector<std::vector<int>> grid;  // TYPE_NONE или тип фигуры
+    std::vector<std::vector<int>> grid;
     int width;
     int height;
 };
@@ -61,6 +61,7 @@ struct GameData {
 bool init_game(GameData &game);
 bool init_graphics(GameData& game);
 void cleanup(GameData &game);
+void init_random();
 
 // Игровая логика
 void update_game(GameData& game, float dt);
@@ -96,4 +97,4 @@ SDL_Color get_color_for_type(int type);
 Tetromino create_tetromino(int type);
 void add_score(GameData& game, int points);
 
-#endif // TETRIS_HPP
+#endif

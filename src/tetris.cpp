@@ -1,10 +1,9 @@
 #include "tetris.hpp"
 #include "constants.hpp"
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
-#include <algorithm>
-#include <sstream>
+#include <random>
+
+static std::mt19937 gen(std::random_device{}());
 
 const std::array<std::array<Point, 4>, 7> TETROMINO_SHAPES = {
     {// I
@@ -24,7 +23,6 @@ const std::array<std::array<Point, 4>, 7> TETROMINO_SHAPES = {
 
 // Инициализация игры
 bool init_game(GameData& game) {
-    std::srand(static_cast<unsigned>(SDL_GetTicks()));
 
 	// Инициализация SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -59,7 +57,7 @@ bool init_game(GameData& game) {
         return false;
     }
 
-	 // Инициализация SDL_ttf
+	 // Инициализация шрифта
     if (TTF_Init() == -1) {
         std::cerr << "SDL_ttf could not initialize! SDL_ttf Error: " << TTF_GetError() << std::endl;
         return false;
@@ -88,14 +86,15 @@ bool init_game(GameData& game) {
 	game.is_paused = false;
     game.is_running = true;
 
-	// Инициализация графики и звука
+	// Инициализация графики
     if (!init_graphics(game)) {
         std::cerr << "Failed to initialize graphics!\n";
         return false;
     }
 
-	// Создание первой и следующей фигур
-    game.next_piece = create_tetromino(std::rand() % 7);
+	// Создание фигур
+	static std::uniform_int_distribution<int> shape_dist(0, 6);
+    game.next_piece = create_tetromino(shape_dist(gen));
     spawn_new_piece(game);
 
 	return true;
@@ -128,7 +127,7 @@ void cleanup(GameData& game) {
 	SDL_Quit();
 }
 
-// Создание новой фигуры
+// Создание фигуры
 Tetromino create_tetromino(int type) {
     Tetromino piece;
     piece.type = type;
@@ -136,7 +135,6 @@ Tetromino create_tetromino(int type) {
     piece.color = get_color_for_type(type);
     piece.position = {BOARD_WIDTH / 2 - 1, 0};
     
-    // Копирование формы
     for (int i = 0; i < 4; ++i) {
         piece.blocks[i] = TETROMINO_SHAPES[type][i];
     }
@@ -144,7 +142,7 @@ Tetromino create_tetromino(int type) {
     return piece;
 }
 
-// Получение цвета для типа фигуры
+// Получение цвета для фигуры
 SDL_Color get_color_for_type(int type) {
     switch (type) {
         case TYPE_I: return COLOR_I;
@@ -168,7 +166,7 @@ void update_game(GameData& game, float dt) {
     // Обновление таймера падения
     game.fall_timer += dt * 1000.0f; // в миллисекундах
     
-    // Автоматическое падение
+    // Падение
     if (game.fall_timer >= game.fall_speed) {
         if (!move_piece(game.current_piece, 0, 1, game.board)) {
 			// Фиксация фигуры
@@ -242,7 +240,7 @@ bool check_collision(const Tetromino& piece, const GameBoard& board) {
     return false;
 }
 
-// Поворот фигуры
+// Поворот
 void rotate_piece(Tetromino& piece, bool clockwise, const GameBoard& board) {
     if (piece.type == TYPE_O) return;
     
@@ -261,7 +259,7 @@ void rotate_piece(Tetromino& piece, bool clockwise, const GameBoard& board) {
         }
     }
     
-    // Wall kick
+    // Касание стен
     Point offsets[] = {{0, 0}, {-1, 0}, {1, 0}, {0, -1}};
     
     for (const auto& offset : offsets) {
@@ -313,7 +311,8 @@ int clear_completed_lines(GameBoard& board) {
 // Создание новой фигуры
 void spawn_new_piece(GameData& game) {
     game.current_piece = game.next_piece;
-    game.next_piece = create_tetromino(std::rand() % 7);
+	static std::uniform_int_distribution<int> shape_dist(0, 6);
+    game.next_piece = create_tetromino(shape_dist(gen));
     game.current_piece.position = {BOARD_WIDTH / 2 - 1, 0};
 	if (check_collision(game.current_piece, game.board)){
 			game.game_over = true;
@@ -333,4 +332,15 @@ void hard_drop_piece(GameData& game) {
 
 void add_score(GameData& game, int points) {
     game.score += points;
+}
+
+void init_random() {
+    static bool initialized = false;
+    if (!initialized) {
+        // Комбинация времени и random_device для лучшей энтропии
+        auto seed = std::chrono::high_resolution_clock::now()
+                   .time_since_epoch().count() ^ std::random_device{}();
+        gen.seed(seed);
+        initialized = true;
+    }
 }

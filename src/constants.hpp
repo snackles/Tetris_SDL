@@ -19,20 +19,20 @@ const int BOARD_OFFSET_Y = 50;
 const int NEXT_PIECE_X = 400;
 const int NEXT_PIECE_Y = 50;
 const int SCORE_X =400;
-const int SCORE_Y = 400;
+const int SCORE_Y = 200;
 const int LEVEL_X = 400;
-const int LEVEL_Y=  450;
+const int LEVEL_Y=  250;
 const int LINES_X = 400;
-const int LINES_Y = 500;
+const int LINES_Y = 300;
 
-// Цвета (RGBA)
+// Цвета
 const SDL_Color COLOR_BACKGROUND = {211, 211, 211, 255};
 const SDL_Color COLOR_BOARD = {20, 20, 40, 255};
 const SDL_Color COLOR_GRID = {40, 40, 60, 175};
 const SDL_Color COLOR_TEXT = {20, 20, 40, 255};
 const SDL_Color COLOR_TEXT_SHADOW = {0, 0, 0, 150};
 
-// Цвета фигур тетриса
+// Цвета фигур
 const SDL_Color COLOR_I = {0, 255, 255, 255};     // Голубой
 const SDL_Color COLOR_O = {255, 255, 0, 255};     // Желтый
 const SDL_Color COLOR_T = {160, 0, 160, 255};     // Фиолетовый
@@ -87,4 +87,4 @@ const float FRAME_TIME = 1.0f / 60.0f;  // 60 FPS
 const float DAS_DELAY = 0.16f;         // Delayed Auto Shift
 const float DAS_SPEED = 0.03f;         // Auto repeat rate
 
-#endif // TETRIS_CONSTANTS_HPP
+#endif

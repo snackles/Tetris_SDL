@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
 			// Обработка событий
             process_events(game);
 			
-            // Расчет дельты времени
+            // Расчет  времени
             Uint32 current_time = SDL_GetTicks();
             game.delta_time = (current_time - game.last_time) / 1000.0f;
             game.last_time = current_time;;

@@ -28,13 +28,16 @@ void render_game(GameData& game) {
 
 	// Рисование Game Over
 	if (game.game_over) {
-        draw_text(game, "GAME OVER", 
+		SDL_Rect game_over_bg = {WINDOW_WIDTH / 2 - 170, WINDOW_HEIGHT / 2 - 55, 280, 120};
+		SDL_SetRenderDrawColor(game.renderer, 0, 0, 0, 255);
+		SDL_RenderFillRect(game.renderer, &game_over_bg);
+        draw_text(game, "GAME OVER",
                  WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 - 25,
                  SDL_Color{255, 0, 0, 255});
     }
 }
 
-// Рисование текста (аналог SFML sf::Text)
+// Рисование текста
 void draw_text(GameData& game, const std::string& text, int x, int y, SDL_Color color) {
     if (!game.font) return;
     
@@ -60,7 +63,6 @@ void draw_block(GameData& game, int x, int y, const SDL_Color& color, bool is_gh
     };
 	
 	if (is_ghost) {
-        // Полупрозрачный для ghost фигуры
         SDL_SetRenderDrawColor(game.renderer, 
 							   color.r, color.g, color.b, 100);
     } else {
@@ -137,11 +139,9 @@ void draw_current_piece(GameData& game) {
 
 void draw_ghost_piece(GameData& game) {
     Tetromino ghost = game.current_piece;
-    
-    // Находим позицию падения
+   
     while (move_piece(ghost, 0, 1, game.board)) {}
     
-    // Рисуем ghost фигуру
     for (const auto& block : ghost.blocks) {
         int x = ghost.position.x + block.x;
         int y = ghost.position.y + block.y;
@@ -154,12 +154,11 @@ void draw_ghost_piece(GameData& game) {
 
 // Рисование следующей фигуры
 void draw_next_piece(GameData& game) {
-    // Фон
+
 	SDL_Rect next_bg = {NEXT_PIECE_X, NEXT_PIECE_Y, 120, 120};
 	SDL_SetRenderDrawColor(game.renderer, 0, 0, 0, 255);
     SDL_RenderFillRect(game.renderer, &next_bg);
 
-	// Рисуем следующую фигуру
     for (const auto& block : game.next_piece.blocks) {
         int x = NEXT_PIECE_X / BLOCK_SIZE + block.x;
         int y = NEXT_PIECE_Y / BLOCK_SIZE + block.y;
@@ -167,17 +166,15 @@ void draw_next_piece(GameData& game) {
     }
 }
 
-// Рисование UI (счета, уровня, линий)
+// Рисование UI
 void draw_ui(GameData& game) {
-    // Счет
+
     std::string score_text = "SCORE: " + std::to_string(game.score);
     draw_text(game, score_text, SCORE_X, SCORE_Y, COLOR_TEXT);
     
-    // Уровень
     std::string level_text = "LEVEL: " + std::to_string(game.level);
-    draw_text(game, level_text, LEVEL_X, LEVEL_Y, COLOR_TEXT);
-    
-    // Линии
+    draw_text(game, level_text, LEVEL_X, LEVEL_Y, COLOR_TEXT);    
+
     std::string lines_text = "LINES: " + std::to_string(game.lines_cleared);
     draw_text(game, lines_text, LINES_X, LINES_Y, COLOR_TEXT);
 }
