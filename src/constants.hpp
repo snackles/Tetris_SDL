@@ -81,6 +81,8 @@ const SDL_Keycode KEY_MOVE_DOWN = SDLK_DOWN;
 const SDL_Keycode KEY_HARD_DROP = SDLK_SPACE;
 const SDL_Keycode KEY_ROTATE_CW = SDLK_x;
 const SDL_Keycode KEY_ROTATE_CCW = SDLK_z;
+const SDL_Keycode KEY_PAUSE = SDLK_p;
+const SDL_Keycode KEY_RESTART = SDLK_r;
 
 // Время
 const float FRAME_TIME = 1.0f / 60.0f;  // 60 FPS

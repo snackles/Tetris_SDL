@@ -122,9 +122,15 @@ void cleanup(GameData& game) {
         SDL_DestroyWindow(game.window);
         game.window = NULL;
     }
+
+	if (game.font != NULL) {
+        TTF_CloseFont(game.font);
+        game.font = NULL;
+    }
     
     // Завершение SDL подсистем
-	SDL_Quit();
+	TTF_Quit();
+    SDL_Quit();
 }
 
 // Создание фигуры
@@ -343,4 +349,24 @@ void init_random() {
         gen.seed(seed);
         initialized = true;
     }
+}
+
+void reset_game(GameData& game) {
+    // Очистка поля
+    for (auto& row : game.board.grid) {
+        std::fill(row.begin(), row.end(), TYPE_NONE);
+    }
+    
+    // Сброс состояния
+    game.score = 0;
+    game.level = 1;
+    game.lines_cleared = 0;
+    game.fall_speed = INITIAL_FALL_SPEED;
+    game.game_over = false;
+    game.is_paused = false;
+    
+    // Создание новых фигур
+	static std::uniform_int_distribution<int> shape_dist(0, 6);
+    game.next_piece = create_tetromino(shape_dist(gen));
+    spawn_new_piece(game);
 }

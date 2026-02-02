@@ -71,7 +71,8 @@ bool check_collision(const Tetromino &piece, const GameBoard &board);
 void hard_drop_piece(GameData &game);
 void merge_piece(GameData &game);
 void rotate_piece(Tetromino &piece, bool clockwise, const GameBoard &board);
-int clear_completed_lines(GameBoard& board);
+int clear_completed_lines(GameBoard &board);
+void reset_game(GameData& game);
 
 // Графика
 void render_game(GameData& game);

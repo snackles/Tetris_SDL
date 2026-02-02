@@ -34,6 +34,16 @@ void render_game(GameData& game) {
         draw_text(game, "GAME OVER",
                  WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 - 25,
                  SDL_Color{255, 0, 0, 255});
+		draw_text(game, "PRESS 'R' TO RESET",
+                 WINDOW_WIDTH / 2 - 150, WINDOW_HEIGHT / 2,
+                 SDL_Color{255, 0, 0, 255});
+    } else if (game.is_paused) {
+		SDL_Rect pause_bg = {WINDOW_WIDTH / 2 - 170, WINDOW_HEIGHT / 2 - 55, 250, 60};
+		SDL_SetRenderDrawColor(game.renderer, 0, 0, 0, 255);
+		SDL_RenderFillRect(game.renderer, &pause_bg);
+        draw_text(game, "PAUSED", 
+                 WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 - 25,
+                 SDL_Color{255, 255, 0, 255});
     }
 }
 
@@ -158,6 +168,8 @@ void draw_next_piece(GameData& game) {
 	SDL_Rect next_bg = {NEXT_PIECE_X, NEXT_PIECE_Y, 120, 120};
 	SDL_SetRenderDrawColor(game.renderer, 0, 0, 0, 255);
     SDL_RenderFillRect(game.renderer, &next_bg);
+
+	draw_text(game, "NEXT", NEXT_PIECE_X, NEXT_PIECE_Y - 20, COLOR_TEXT);
 
     for (const auto& block : game.next_piece.blocks) {
         int x = NEXT_PIECE_X / BLOCK_SIZE + block.x;

@@ -12,17 +12,24 @@ void process_events(GameData& game) {
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
 			// Выход
-            case SDL_QUIT:
-                game.is_running = false;
-                break;
+		case SDL_QUIT:
+			game.is_running = false;
+			break;
 			// Нажатие
-            case SDL_KEYDOWN:
-                handle_key_press(game, event.key.keysym.sym);
-                break;
+		case SDL_KEYDOWN:
+			handle_key_press(game, event.key.keysym.sym);
+			break;
 			// Отпускание      
-            case SDL_KEYUP:
-                handle_key_release(game, event.key.keysym.sym);
-                break;
+		case SDL_KEYUP:
+			handle_key_release(game, event.key.keysym.sym);
+			break;
+		case SDL_WINDOWEVENT:
+			if (event.window.event == SDL_WINDOWEVENT_FOCUS_LOST) {
+				if (!game.game_over) {
+					game.is_paused = true;
+				}
+			}
+			break;
 		}
 	}
 	// Непрерывный ввод
@@ -36,17 +43,26 @@ void handle_key_press(GameData& game, SDL_Keycode key) {
         return;
     }
     switch (key) {
-		case KEY_HARD_DROP:
-            if (!game.is_paused && !game.game_over) {
-                hard_drop_piece(game);
-            }
-            break;
+	case KEY_PAUSE:
+		if (!game.game_over) {
+			game.is_paused = !game.is_paused;
+		}
+		break;
+	case KEY_RESTART:
+		if (game.game_over || game.is_paused) {
+			reset_game(game);
+		}
+		break;
+	case KEY_HARD_DROP:
+		if (!game.is_paused && !game.game_over) {
+			hard_drop_piece(game);
+		}
+		break;
 	case KEY_ROTATE_CW:
 		if (!game.is_paused && !game.game_over) {
 			rotate_piece(game.current_piece, true, game.board);
 		}
-		break;
-            
+		break;           
 	case KEY_ROTATE_CCW:
 		if (!game.is_paused && !game.game_over) {
 			rotate_piece(game.current_piece, false, game.board);
