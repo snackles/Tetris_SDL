@@ -1,6 +1,7 @@
 CXX = clang++
 CXXFLAGS = -std=c++17 -Wall -Wextra -I/opt/homebrew/include -Isrc
-LDFLAGS = -L/opt/homebrew/lib -lSDL2 -lSDL2_ttf
+SDL_CFLAGS = $(shell pkg-config --cflags sdl2 SDL2_ttf 2>/dev/null)
+LDFLAGS = $(shell pkg-config --libs sdl2 SDL2_ttf 2>/dev/null)
 
 TARGET = tetris
 SOURCES = src/main.cpp src/tetris.cpp src/graphics.cpp src/input.cpp
