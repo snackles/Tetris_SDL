@@ -13,18 +13,20 @@ MacOS:
 
 Navigation:
 
-Move left - Left arrow
+Move left - A
 
-Move right - Right arrow
+Move right - D
 
-Down faster - Down arrow
+Down faster - S
 
-Hard drop - Spase
+Hard drop - W
 
-Rotate left - Z
+Rotate left - Q
 
-Rotate right - X
+Rotate right - E
 
 Pause - P
 
 Restart - R (it works during a pause or after a loss)
+
+Qiut - ESCAPE

@@ -1,5 +1,5 @@
-#include "tetris.hpp"
-#include "constants.hpp"
+#include "../include/tetris.hpp"
+#include "../include/constants.hpp"
 #include <string>
 
 // Отрисовка всей игры

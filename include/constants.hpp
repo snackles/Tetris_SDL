@@ -63,7 +63,7 @@ enum TetrominoType {
 
 // Скорость игры
 const float INITIAL_FALL_SPEED = 1000.0f;  // 1 секунда
-const float SPEED_INCREASE_PER_LEVEL = 0.9f;
+const float SPEED_INCREASE_PER_LEVEL = 0.8f;
 const int LINES_PER_LEVEL = 10;
 
 // Очки
@@ -75,16 +75,18 @@ const int SCORE_SOFT_DROP = 1;
 const int SCORE_HARD_DROP_PER_CELL = 2;
 
 // Коды клавиш
-const SDL_Keycode KEY_MOVE_LEFT = SDLK_LEFT;
-const SDL_Keycode KEY_MOVE_RIGHT = SDLK_RIGHT;
-const SDL_Keycode KEY_MOVE_DOWN = SDLK_DOWN;
-const SDL_Keycode KEY_HARD_DROP = SDLK_SPACE;
-const SDL_Keycode KEY_ROTATE_CW = SDLK_x;
-const SDL_Keycode KEY_ROTATE_CCW = SDLK_z;
+const SDL_Keycode KEY_MOVE_LEFT = SDLK_a;
+const SDL_Keycode KEY_MOVE_RIGHT = SDLK_d;
+const SDL_Keycode KEY_MOVE_DOWN = SDLK_s;
+const SDL_Keycode KEY_HARD_DROP = SDLK_w;
+const SDL_Keycode KEY_ROTATE_CW = SDLK_q;
+const SDL_Keycode KEY_ROTATE_CCW = SDLK_e;
 const SDL_Keycode KEY_PAUSE = SDLK_p;
+const SDL_Keycode KEY_RESTART = SDLK_r;
+const SDL_Keycode KEY_QUIT = SDLK_ESCAPE;
 
 const float FRAME_TIME = 1.0f / 60.0f;  // 60 FPS
-const float DAS_DELAY = 0.16f;         // Delayed Auto Shift
-const float DAS_SPEED = 0.03f;         // Auto repeat rate
+const float DAS_DELAY = 0.13f;        
+const float DAS_SPEED = 0.03f;         
 
 #endif

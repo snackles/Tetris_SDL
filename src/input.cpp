@@ -1,5 +1,5 @@
-#include "tetris.hpp"
-#include "constants.hpp"
+#include "../include/tetris.hpp"
+#include "../include/constants.hpp"
 #include <iostream>
 
 SDL_Event event;
@@ -43,6 +43,9 @@ void handle_key_press(GameData& game, SDL_Keycode key) {
         return;
     }
     switch (key) {
+	case KEY_QUIT:
+		game.is_running = false;
+		break;
 	case KEY_PAUSE:
 		if (!game.game_over) {
 			game.is_paused = !game.is_paused;
@@ -91,7 +94,7 @@ void handle_keyboard(GameData& game, float dt) {
     const uint8_t* keystate = SDL_GetKeyboardState(NULL);
     
     // Движение влево
-    if (keystate[SDL_SCANCODE_LEFT]) {
+    if (keystate[SDL_SCANCODE_A]) {
         if (!left_was_pressed || left_timer >= DAS_DELAY) {
             float move_rate = left_was_pressed ? DAS_SPEED : 0.0f;
             if (left_timer >= move_rate) {
@@ -107,7 +110,7 @@ void handle_keyboard(GameData& game, float dt) {
     }
     
     // Движение вправо
-    if (keystate[SDL_SCANCODE_RIGHT]) {
+    if (keystate[SDL_SCANCODE_D]) {
         if (!right_was_pressed || right_timer >= DAS_DELAY) {
             float move_rate = right_was_pressed ? DAS_SPEED : 0.0f;
             if (right_timer >= move_rate) {
@@ -123,7 +126,7 @@ void handle_keyboard(GameData& game, float dt) {
     }
     
     // Быстрое падение
-    if (keystate[SDL_SCANCODE_DOWN]) {
+    if (keystate[SDL_SCANCODE_S]) {
         if (!down_was_pressed || down_timer >= 0.05f) {
             if (move_piece(game.current_piece, 0, 1, game.board)){}
             down_timer = 0.0f;

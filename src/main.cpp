@@ -1,9 +1,9 @@
-#include "tetris.hpp"
-#include "constants.hpp"
+#include "../include/tetris.hpp"
+#include "../include/constants.hpp"
 #include <iostream>
 
 int main(int argc, char* argv[]) {
-    std::cout << "=== Tetris SDL2 (SFML-like) ===\n";
+    std::cout << "=== Tetris SDL2 without OOP ===\n";
     
     GameData game;
     

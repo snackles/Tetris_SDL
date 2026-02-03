@@ -4,7 +4,7 @@ LDFLAGS = -L/opt/homebrew/lib -lSDL2 -lSDL2_ttf
 
 TARGET = tetris
 SOURCES = src/main.cpp src/tetris.cpp src/graphics.cpp src/input.cpp
-HEADERS = src/tetris.hpp src/constants.hpp
+HEADERS = include/tetris.hpp include/constants.hpp
 
 all: $(TARGET)
 
