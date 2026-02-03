@@ -361,6 +361,7 @@ void reset_game(GameData& game) {
     game.score = 0;
     game.level = 1;
     game.lines_cleared = 0;
+	 game.game_state = STATE_PLAYING;
     game.fall_speed = INITIAL_FALL_SPEED;
     game.game_over = false;
     game.is_paused = false;

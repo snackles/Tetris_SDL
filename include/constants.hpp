@@ -82,9 +82,7 @@ const SDL_Keycode KEY_HARD_DROP = SDLK_SPACE;
 const SDL_Keycode KEY_ROTATE_CW = SDLK_x;
 const SDL_Keycode KEY_ROTATE_CCW = SDLK_z;
 const SDL_Keycode KEY_PAUSE = SDLK_p;
-const SDL_Keycode KEY_RESTART = SDLK_r;
 
-// Время
 const float FRAME_TIME = 1.0f / 60.0f;  // 60 FPS
 const float DAS_DELAY = 0.16f;         // Delayed Auto Shift
 const float DAS_SPEED = 0.03f;         // Auto repeat rate
