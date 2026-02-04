@@ -1,0 +1,22 @@
+CXX = g++
+CXXFLAGS = -std=c++17 -Wall -Wextra -I../include -I/mingw64/include/SDL2
+
+SOURCES = ../src/main.cpp ../src/tetris.cpp ../src/graphics.cpp ../src/input.cpp
+TARGET = tetris.exe
+
+LDFLAGS = -L/mingw64/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf
+
+all: $(TARGET)
+
+$(TARGET): $(SOURCES)
+	$(CXX) $(CXXFLAGS) $(SOURCES) -o $(TARGET) $(LDFLAGS)
+
+run: $(TARGET)
+	cp /mingw64/bin/SDL2.dll . 2>/dev/null || true
+	cp /mingw64/bin/SDL2_ttf.dll . 2>/dev/null || true
+	./$(TARGET)
+
+clean:
+	rm -f $(TARGET) *.o SDL2.dll SDL2_ttf.dll
+
+.PHONY: all run clean

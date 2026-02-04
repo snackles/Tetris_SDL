@@ -2,6 +2,7 @@
 #include "../include/constants.hpp"
 #include <iostream>
 #include <random>
+#include <chrono>
 
 static std::mt19937 gen(std::random_device{}());
 

@@ -3,8 +3,8 @@ CXXFLAGS = -std=c++17 -Wall -Wextra -I/opt/homebrew/include -Isrc
 LDFLAGS = -L/opt/homebrew/lib -lSDL2 -lSDL2_ttf
 
 TARGET = tetris
-SOURCES = src/main.cpp src/tetris.cpp src/graphics.cpp src/input.cpp
-HEADERS = include/tetris.hpp include/constants.hpp
+SOURCES = ../src/main.cpp ../src/tetris.cpp ../src/graphics.cpp ../src/input.cpp
+HEADERS = ../include/tetris.hpp ../include/constants.hpp
 
 all: $(TARGET)
 

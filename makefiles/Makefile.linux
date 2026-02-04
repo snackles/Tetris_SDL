@@ -4,8 +4,8 @@ SDL_CFLAGS = -I/usr/include/SDL2
 SDL_LDFLAGS = -lSDL2 -lSDL2_ttf
 
 TARGET = tetris
-SOURCES = src/main.cpp src/tetris.cpp src/graphics.cpp src/input.cpp
-HEADERS = include/tetris.hpp include/constants.hpp
+SOURCES = ./src/main.cpp ./src/tetris.cpp ./src/graphics.cpp ./src/input.cpp
+HEADERS = ./include/tetris.hpp ./include/constants.hpp
 
 all: $(TARGET)
 
