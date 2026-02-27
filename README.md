@@ -21,14 +21,13 @@ Windows:
 >./tetris
 
 # Navigation:
+W - Hard drop
 
 A - Move left
 
-D - Move right
-
 S - Down faster
 
-W - Hard drop
+D - Move right
 
 Q - Rotate left
 
