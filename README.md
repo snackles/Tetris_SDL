@@ -6,20 +6,20 @@ Need to install: SDL2, SDL2_ttf
 
 # Run
 Linux:
->make -f Makefile.linux
-
-> ./tetris
-
+```bash
+make -f Makefile.linux
+./tetris
+```
 MacOS:
->make
-
->make run
-
+```bash
+make
+make run
+```
 Windows:
->make -f Makefile.win
-
->./tetris
-
+```bash
+make -f Makefile.win
+./tetris
+```
 # Navigation:
 W - Hard drop
 
