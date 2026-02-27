@@ -20,23 +20,23 @@ Windows:
 
 >./tetris
 
-Navigation:
+# Navigation:
 
-Move left - A
+A - Move left
 
-Move right - D
+D - Move right
 
-Down faster - S
+S - Down faster
 
-Hard drop - W
+W - Hard drop
 
-Rotate left - Q
+Q - Rotate left
 
-Rotate right - E
+E - Rotate right
 
-Pause - P
+P - Pause
 
-Restart - R (it works during a pause or after a loss)
+R - Restart (it works during a pause or after a loss)
 
-Qiut - ESCAPE
+ESCAPE - Qiut
 
